@@ -16,3 +16,6 @@ frontend/*.local
 .idea/
 *.swp
 *.swo
+
+# GitHub Initialized README
+README.md
