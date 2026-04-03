@@ -1,42 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastProvider } from './components/Toast';
-import Sidebar from './components/Sidebar';
+import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import MeetingDetail from './pages/MeetingDetail';
+import Sidebar from './components/Sidebar';
+import { ToastProvider } from './components/Toast';
 import './index.css';
 
-import Login from './pages/Login';
+const AppContent = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem('isAuthenticated') === 'true'
+  );
 
-const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(!!localStorage.getItem('isAuthenticated'));
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userFullName');
+    setIsAuthenticated(false);
+  };
 
   if (!isAuthenticated) {
-    return (
-      <ToastProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </ToastProvider>
-    );
+    return <Auth onAuthSuccess={handleLogin} />;
   }
 
   return (
+    <div className="app-container">
+      <Sidebar onLogout={handleLogout} />
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/meeting/:id" element={<MeetingDetail />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
     <ToastProvider>
       <BrowserRouter>
-        <div className="app-container">
-          <Sidebar />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/meeting/:id" element={<MeetingDetail />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        </div>
+        <AppContent />
       </BrowserRouter>
     </ToastProvider>
   );

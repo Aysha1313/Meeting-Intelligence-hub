@@ -1,0 +1,99 @@
+.sentiment-chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.chart-header h3 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.sentiment-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.indicator.sentiment-positive { background-color: var(--sentiment-positive); }
+.indicator.sentiment-neutral { background-color: var(--sentiment-neutral); }
+.indicator.sentiment-negative { background-color: var(--sentiment-negative); }
+.indicator.sentiment-conflict { background-color: var(--sentiment-conflict); }
+
+.chart-wrapper {
+  width: 100%;
+}
+
+.custom-tooltip {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  max-width: 250px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+.tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 0.5rem;
+}
+
+.sentiment-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.sentiment-indicator.sentiment-positive { background-color: var(--sentiment-positive); }
+.sentiment-indicator.sentiment-neutral { background-color: var(--sentiment-neutral); }
+.sentiment-indicator.sentiment-negative { background-color: var(--sentiment-negative); }
+.sentiment-indicator.sentiment-conflict { background-color: var(--sentiment-conflict); }
+
+.tooltip-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.tooltip-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+
+.chart-empty {
+  padding: 4rem;
+  text-align: center;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}

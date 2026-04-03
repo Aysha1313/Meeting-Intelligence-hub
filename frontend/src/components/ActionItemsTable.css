@@ -1,0 +1,119 @@
+.items-table-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.items-table th {
+  padding: 1rem 1.5rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.items-table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.items-table tr:last-child td {
+  border-bottom: none;
+}
+
+.items-table tr {
+  transition: background-color var(--duration-fast) var(--ease-smooth);
+}
+
+.items-table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.item-description {
+  width: 60%;
+  line-height: 1.6;
+}
+
+.item-text {
+  font-weight: 500;
+}
+
+.assignee-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-surface);
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.assignee-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  color: white;
+}
+
+.assignee-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.unassigned {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.deadline-pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--sentiment-negative);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+}
+
+.no-deadline {
+  color: var(--text-tertiary);
+}
+
+.items-empty {
+  padding: 4rem;
+  text-align: center;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.items-row-skeleton {
+  height: 60px;
+  margin-bottom: 1rem;
+}
+
+.items-row-skeleton:last-child {
+  margin-bottom: 0;
+}

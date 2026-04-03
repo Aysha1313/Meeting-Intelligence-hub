@@ -1,0 +1,91 @@
+.meeting-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  color: var(--text-primary);
+}
+
+.detail-header {
+  margin-bottom: 3rem;
+}
+
+.header-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.metadata {
+  display: flex;
+  gap: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.metadata span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.analysis-tabs {
+  margin-top: 3rem;
+}
+
+.tabs-header {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  background-color: var(--accent-glow);
+}
+
+.tab-content {
+  min-height: 400px;
+}
+
+.detail-loading {
+  padding: 2rem;
+}
+
+.detail-error {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.25rem;
+  color: var(--sentiment-negative);
+}

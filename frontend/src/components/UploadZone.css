@@ -1,0 +1,82 @@
+.upload-zone {
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-zone:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+}
+
+.upload-zone.dragging {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.05);
+  transform: scale(1.01);
+}
+
+.upload-zone.uploading {
+  cursor: default;
+  pointer-events: none;
+}
+
+.upload-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.upload-icon-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.upload-zone:hover .upload-icon-wrapper {
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+.upload-icon {
+  color: var(--text-secondary);
+}
+
+.upload-zone:hover .upload-icon {
+  color: var(--accent);
+}
+
+.upload-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.upload-subtitle {
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
