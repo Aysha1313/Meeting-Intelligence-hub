@@ -10,15 +10,12 @@ load_dotenv()
 client = Mistral(api_key=os.getenv("MISTRAL_API_KEY"))
 
 # Use mistral-small — cheaper, still very capable for extraction tasks
-# Switch to mistral-large-latest only if quality is not good enough
 MODEL = "mistral-small-latest"
 
 
 def _call_mistral(prompt: str, retries: int = 3) -> str:
     """
-    FIX #1 — Retry with exponential backoff.
-    Mistral has frequent outages (326+ in 11 months).
-    This retries 3 times: waits 1s, 2s, 4s between attempts.
+    Standard sync Mistral call with simple retry loop.
     """
     last_error = None
     for attempt in range(retries):
@@ -30,17 +27,32 @@ def _call_mistral(prompt: str, retries: int = 3) -> str:
             return response.choices[0].message.content.strip()
         except Exception as e:
             last_error = e
+            error_str = str(e).lower()
+            if "getaddrinfo" in error_str or "connection" in error_str:
+                print(f"NETWORK ERROR: Could not reach Mistral API. Please check your internet connection and DNS settings. Error: {e}")
+            else:
+                print(f"Mistral call failed (attempt {attempt+1}). Error: {e}")
+
             if attempt < retries - 1:
-                wait = 2 ** attempt  # 1s, 2s, 4s
-                print(f"Mistral call failed (attempt {attempt+1}). Retrying in {wait}s... Error: {e}")
+                wait = 2 ** attempt
                 time.sleep(wait)
             else:
-                print(f"Mistral call failed after {retries} attempts: {e}")
+                print(f"Mistral call fully failed after {retries} attempts.")
 
-    raise HTTPException(
-        status_code=503,
-        detail="AI service is temporarily unavailable. Please try again in a few minutes."
-    )
+    # If we reached here, all attempts failed. 
+    # Return a specific structure or raise an informative error.
+    if "getaddrinfo" in str(last_error):
+        error_msg = "Network/DNS issue: Cannot reach Mistral AI. Check your internet connection."
+    else:
+        error_msg = f"AI service unavailable: {str(last_error)}"
+
+    # For extraction/sentiment, return empty but valid JSON to prevent UI crashes if called sync
+    if "DECISIONS" in prompt:
+        return '{"decisions": [], "action_items": []}'
+    elif "sentiment" in prompt:
+        return '[]'
+        
+    raise HTTPException(status_code=503, detail=error_msg)
 
 
 def _parse_json(raw: str) -> any:

@@ -7,9 +7,14 @@ from typing import List
 
 router = APIRouter(prefix="/meetings", tags=["Meetings"])
 
+from datetime import datetime
+
 @router.post("/", response_model=schemas.MeetingResponse)
 def create_meeting(meeting: schemas.MeetingCreate, db: Session = Depends(get_db)):
-    db_meeting = models.Meeting(project_name=meeting.project_name, meeting_date=meeting.meeting_date)
+    db_meeting = models.Meeting(
+        project_name=meeting.project_name, 
+        meeting_date=meeting.meeting_date or datetime.utcnow()
+    )
     db.add(db_meeting)
     db.commit()
     db.refresh(db_meeting)

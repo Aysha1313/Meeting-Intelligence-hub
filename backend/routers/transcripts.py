@@ -23,11 +23,12 @@ def run_ai_extraction(transcript_id: int, clean_text: str, speakers: list, meeti
     from database import SessionLocal
     db = SessionLocal()
     try:
-        # Add to vector store for chatbot
+        # 1. Add to vector store for chatbot
         chunks = chunk_text(clean_text)
         add_chunks(transcript_id, meeting_id, filename, chunks)
+        db.commit() # Save progress
 
-        # Extract decisions + action items
+        # 2. Extract decisions + action items
         extracted = extract_decisions_and_actions(clean_text)
         for d in extracted.get("decisions", []):
             db.add(models.Decision(
@@ -42,8 +43,9 @@ def run_ai_extraction(transcript_id: int, clean_text: str, speakers: list, meeti
                 task_description=a["task_description"],
                 due_date=a.get("due_date", "Not specified")
             ))
+        db.commit() # Save progress
 
-        # Sentiment analysis
+        # 3. Sentiment analysis
         sentiment_segments = analyze_sentiment(clean_text, speakers)
         for i, seg in enumerate(sentiment_segments):
             db.add(models.SentimentSegment(
@@ -54,8 +56,9 @@ def run_ai_extraction(transcript_id: int, clean_text: str, speakers: list, meeti
                 score=seg["score"],
                 segment_index=i
             ))
+        db.commit() # Save progress
 
-        # Mark as done
+        # 4. Mark as done
         transcript = db.query(models.Transcript).filter(models.Transcript.id == transcript_id).first()
         if transcript:
             transcript.status = "done"
@@ -86,7 +89,20 @@ async def upload_transcript(
         )
 
     content = await file.read()
-    text = content.decode('utf-8')
+    try:
+        # Try UTF-8 first
+        text = content.decode('utf-8')
+    except UnicodeDecodeError:
+        try:
+            # Common for Windows Notepad (with BOM)
+            text = content.decode('utf-16')
+        except UnicodeDecodeError:
+            try:
+                # Common for some legacy systems
+                text = content.decode('latin-1')
+            except UnicodeDecodeError:
+                # Last resort, replace failing characters
+                text = content.decode('utf-8', errors='replace')
 
     if ext == 'vtt':
         clean_text, speakers = parse_vtt(text)
