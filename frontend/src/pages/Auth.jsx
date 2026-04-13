@@ -27,9 +27,9 @@ export const LandingAnimation = ({ onComplete }) => {
            <span className="logo-letter">I</span>
         </div>
         <div className={`expanding-text ${phase === 'expanding' ? 'show' : ''}`}>
-          <span className="word">eeting</span>
+          <span className="word">Meeting</span>
           <span className="space">&nbsp;</span>
-          <span className="word">ntelligence</span>
+          <span className="word">Intelligence</span>
         </div>
       </div>
     </div>

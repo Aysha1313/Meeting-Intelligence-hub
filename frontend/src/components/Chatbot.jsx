@@ -39,18 +39,21 @@ const Chatbot = ({ meetingId }) => {
 
     try {
       const response = await chatAPI.ask(text, meetingId);
-      
+
       const assistantMessage = {
         role: 'assistant',
         content: response.data.answer,
         sources: response.data.sources || []
       };
-      
+
       setMessages(prev => [...prev, assistantMessage]);
-    } catch {
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMsg = error.response?.data?.detail || 'I encountered an error connecting to the AI. Please check your internet connection or DNS settings and try again.';
+
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, I encountered an error while trying to answer your question. Please try again.',
+        content: errorMsg,
         isError: true
       }]);
     } finally {
@@ -78,13 +81,13 @@ const Chatbot = ({ meetingId }) => {
                 {msg.isError && <AlertCircle size={16} className="error-icon" />}
                 <p>{msg.content}</p>
               </div>
-              
+
               {msg.sources && msg.sources.length > 0 && (
                 <div className="message-sources">
                   <span className="source-label">Sources:</span>
                   {msg.sources.map((source, idx) => (
-                    <span key={idx} className="source-chip" title={source.text}>
-                      {source.timestamp}
+                    <span key={idx} className="source-chip" title={source.text || source.excerpt}>
+                      {source.timestamp || source.filename}
                     </span>
                   ))}
                 </div>
@@ -109,8 +112,8 @@ const Chatbot = ({ meetingId }) => {
       {messages.length === 1 && (
         <div className="suggested-questions">
           {suggestedQuestions.map((q, i) => (
-            <button 
-              key={i} 
+            <button
+              key={i}
               className="suggestion-btn animate-fade-up"
               style={{ animationDelay: `${i * 100}ms` }}
               onClick={() => handleSend(q)}
@@ -130,8 +133,8 @@ const Chatbot = ({ meetingId }) => {
           rows="1"
           disabled={isTyping}
         />
-        <button 
-          className="send-btn" 
+        <button
+          className="send-btn"
           onClick={() => handleSend(input)}
           disabled={!input.trim() || isTyping}
         >

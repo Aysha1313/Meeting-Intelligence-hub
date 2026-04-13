@@ -94,6 +94,7 @@
 
 .message-bubble p {
   margin: 0;
+  color: inherit;
 }
 
 .message-sources {

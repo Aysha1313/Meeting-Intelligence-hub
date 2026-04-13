@@ -33,7 +33,7 @@ const MeetingCard = ({ meeting }) => {
     <Link to={`/meeting/${meeting.id}`} className="meeting-card">
       <div className="card-top">
         <h3>{meeting.project_name}</h3>
-        <span className="date-chip">{new Date(meeting.meeting_date).toLocaleDateString()}</span>
+        <span className="date-chip">{new Date(meeting.meeting_date).toLocaleString()}</span>
       </div>
       <div className="card-stats">
         <span className="badge">
@@ -68,6 +68,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState({ totalMeetings: 0, totalTranscripts: 0, totalActions: 0, avgSentiment: '0.0' });
   const [showModal, setShowModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
+  const [newMeetingDate, setNewMeetingDate] = useState('');
   const userFullName = localStorage.getItem('userFullName') || 'User';
 
   const calculateStats = (data) => {
@@ -97,10 +98,14 @@ const Dashboard = () => {
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
-    if (!newProjectName.trim()) return;
+    if (!newProjectName.trim() || !newMeetingDate) return;
     try {
-      await meetingAPI.create({ project_name: newProjectName });
+      await meetingAPI.create({ 
+        project_name: newProjectName,
+        meeting_date: newMeetingDate
+      });
       setNewProjectName('');
+      setNewMeetingDate('');
       setShowModal(false);
       fetchMeetings();
     } catch {
@@ -158,6 +163,15 @@ const Dashboard = () => {
                   placeholder="e.g. Q3 Growth Strategy"
                   value={newProjectName}
                   onChange={(e) => setNewProjectName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label>Meeting Date & Time</label>
+                <input
+                  type="datetime-local"
+                  value={newMeetingDate}
+                  onChange={(e) => setNewMeetingDate(e.target.value)}
                   required
                 />
               </div>

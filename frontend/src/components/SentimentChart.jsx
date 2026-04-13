@@ -25,13 +25,13 @@ const SentimentChart = ({ transcriptId }) => {
       // Format data for Recharts
       const rawData = response.data.sentiment_timeline || response.data || [];
       const formattedData = rawData.map(item => ({
-        time: item.timestamp,
+        time: item.timestamp || `Seg ${item.segment_index + 1}`,
         sentiment: item.sentiment,
         score: item.sentiment === 'positive' ? 1 
              : item.sentiment === 'negative' ? -1 
              : item.sentiment === 'conflict' ? -1.5 
              : 0,
-        text: item.text
+        text: item.text || item.segment_text
       }));
       setData(formattedData);
     } catch {

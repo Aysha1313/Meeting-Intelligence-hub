@@ -1,11 +1,19 @@
 # Meeting Intelligence Hub
 
-A smart system that converts raw meeting transcripts (.txt/.vtt) into structured insights by automatically extracting key decisions and action items. It includes a contextual chatbot that allows users to query transcripts and get accurate answers.
+## Brief Description
+Meeting Intelligence Hub is a smart system that converts raw meeting transcripts (.txt/.vtt) into structured insights by automatically extracting key decisions, action items, and sentiment analysis. It features a comprehensive dashboard with data visualization and an AI-powered contextual chatbot that allows users to query their transcripts and retrieve accurate, context-aware answers.
+
+## Problem Statement & Solution
+**The Problem:**
+Reading through lengthy meeting transcripts or re-watching recordings to find specific decisions, action items, or contextual details is time-consuming and inefficient. Critical information often gets lost, and cross-referencing multiple meetings can be difficult.
+
+**How This Project Solves It:**
+This project addresses these challenges by automating the extraction of key meeting outcomes. It uses generative AI (Mistral AI) to process text and video transcripts, extract structured action items and decisions, and generate a searchable vector database (ChromaDB) of the meeting content. Users can instantly access summarized intelligence, view analytics via a clean React dashboard, and use the integrated chatbot to ask specific questions about what was discussed, saving countless hours of manual review.
 
 ## Tech Stack
 
 ### Frameworks & Libraries
-- **Frontend**: React.js with Vite, Tailwind CSS (implied by typical Vite setups, or standard CSS), Lucide React (Icons), Recharts (Data Visualization).
+- **Frontend**: React.js with Vite, Tailwind CSS, Lucide React (Icons), Recharts (Data Visualization).
 - **Backend**: FastAPI (Python), SQLAlchemy (ORM).
 
 ### Databases

@@ -20,23 +20,38 @@ const UploadZone = ({ meetingId, onUploadComplete }) => {
     setIsDragging(false);
   };
 
-  const validateAndUpload = async (file) => {
-    if (!file.name.endsWith('.vtt')) {
-      addToast('Only .vtt transcript files are supported', 'error');
-      return;
+  const validateAndUploadMany = async (files) => {
+    const validFiles = [];
+    for (const file of files) {
+      if (!file.name.endsWith('.vtt') && !file.name.endsWith('.txt')) {
+        addToast(`File ${file.name} is not supported. Only .vtt and .txt files are supported`, 'error');
+      } else {
+        validFiles.push(file);
+      }
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('meeting_id', meetingId);
+    if (validFiles.length === 0) return;
 
     setIsUploading(true);
+    let successCount = 0;
     try {
-      const response = await transcriptAPI.upload(formData);
-      addToast('Transcript uploaded successfully');
-      onUploadComplete(response.data);
-    } catch (error) {
-      addToast(error.response?.data?.detail || 'Failed to upload transcript', 'error');
+      await Promise.all(validFiles.map(async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('meeting_id', meetingId);
+
+        try {
+          const response = await transcriptAPI.upload(formData);
+          onUploadComplete(response.data);
+          successCount++;
+        } catch (error) {
+          addToast(error.response?.data?.detail || `Failed to upload transcript ${file.name}`, 'error');
+        }
+      }));
+
+      if (successCount > 0) {
+        addToast(`${successCount} transcript(s) uploaded successfully`);
+      }
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -48,13 +63,13 @@ const UploadZone = ({ meetingId, onUploadComplete }) => {
     setIsDragging(false);
     
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      validateAndUpload(e.dataTransfer.files[0]);
+      validateAndUploadMany(Array.from(e.dataTransfer.files));
     }
   };
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      validateAndUpload(e.target.files[0]);
+      validateAndUploadMany(Array.from(e.target.files));
     }
   };
 
@@ -70,7 +85,8 @@ const UploadZone = ({ meetingId, onUploadComplete }) => {
         type="file" 
         ref={fileInputRef} 
         onChange={handleFileChange} 
-        accept=".vtt" 
+        accept=".vtt,.txt" 
+        multiple
         style={{ display: 'none' }} 
       />
       
@@ -84,7 +100,7 @@ const UploadZone = ({ meetingId, onUploadComplete }) => {
           <div className="upload-icon-wrapper">
             <Upload size={24} className="upload-icon" />
           </div>
-          <p className="upload-title">Drop your .vtt transcript here</p>
+          <p className="upload-title">Drop your .vtt or .txt transcript here</p>
           <p className="upload-subtitle">or click to browse from your computer</p>
         </div>
       )}
