@@ -10,6 +10,7 @@ Reading through lengthy meeting transcripts or re-watching recordings to find sp
 **How This Project Solves It:**
 This project addresses these challenges by automating the extraction of key meeting outcomes. It uses generative AI (Mistral AI) to process text and video transcripts, extract structured action items and decisions, and generate a searchable vector database (ChromaDB) of the meeting content. Users can instantly access summarized intelligence, view analytics via a clean React dashboard, and use the integrated chatbot to ask specific questions about what was discussed, saving countless hours of manual review.
 
+**demo video:**https://www.loom.com/share/9b2abd77b4d443fd93ce994eb92aa7ba
 ## Tech Stack
 
 ### Frameworks & Libraries
