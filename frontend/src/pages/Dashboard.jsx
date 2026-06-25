@@ -34,8 +34,15 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [newMeetingDate, setNewMeetingDate] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const [toast, setToast] = useState(null); // { message, type: 'success'|'error' }
   const userFullName = localStorage.getItem('userFullName') || 'User';
   const firstName = userFullName.split(' ')[0];
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   const calculateStats = (data) => {
     const totalMeetings = data.length;
@@ -63,14 +70,33 @@ const Dashboard = () => {
   const handleCreateProject = async (e) => {
     e.preventDefault();
     if (!newProjectName.trim() || !newMeetingDate) return;
+    setIsCreating(true);
+    // Optimistic UI — instantly show project in list
+    const optimisticMeeting = {
+      id: `temp-${Date.now()}`,
+      project_name: newProjectName,
+      meeting_date: newMeetingDate,
+      transcript_count: 0,
+      total_action_items: 0,
+      overall_sentiment: null,
+      transcripts: [],
+    };
+    setMeetings(prev => [optimisticMeeting, ...prev]);
+    setShowModal(false);
+    const nameToCreate = newProjectName;
+    const dateToCreate = newMeetingDate;
+    setNewProjectName('');
+    setNewMeetingDate('');
     try {
-      await meetingAPI.create({ project_name: newProjectName, meeting_date: newMeetingDate });
-      setNewProjectName('');
-      setNewMeetingDate('');
-      setShowModal(false);
-      fetchMeetings();
+      await meetingAPI.create({ project_name: nameToCreate, meeting_date: dateToCreate });
+      showToast(`Project "${nameToCreate}" created!`, 'success');
+      fetchMeetings(); // sync with real data from server
     } catch {
-      console.error('Failed to create project');
+      // Roll back optimistic update on failure
+      setMeetings(prev => prev.filter(m => m.id !== optimisticMeeting.id));
+      showToast('Failed to create project. Please try again.', 'error');
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -79,6 +105,13 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page animate-fade-in">
+
+      {/* ── Toast ── */}
+      {toast && (
+        <div className={`dashboard-toast dashboard-toast--${toast.type}`}>
+          {toast.type === 'success' ? '✅' : '❌'} {toast.message}
+        </div>
+      )}
 
       {/* ── Header ── */}
       <header className="dashboard-header">
@@ -172,8 +205,10 @@ const Dashboard = () => {
                 />
               </div>
               <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
-                <button type="submit" className="confirm-btn">Create Project</button>
+                <button type="button" className="cancel-btn" onClick={() => setShowModal(false)} disabled={isCreating}>Cancel</button>
+                <button type="submit" className="confirm-btn" disabled={isCreating}>
+                  {isCreating ? <span className="btn-spinner" /> : 'Create Project'}
+                </button>
               </div>
             </form>
           </div>
