@@ -1,0 +1,27 @@
+RECV: q='What were the main decisions made?' raw_id=1 parsed_id=1 chunks_found=5
+RECV: q='What were the main decisions made?' raw_id=8 parsed_id=8 chunks_found=1
+RECV: q='What were the main decisions made?' raw_id=7 parsed_id=7 chunks_found=0
+RECV: q='what was the database' raw_id=7 parsed_id=7 chunks_found=0
+RECV: q='what is the database' raw_id=9 parsed_id=9 chunks_found=0
+RECV: q='what is the summary' raw_id=9 parsed_id=9 chunks_found=0
+RECV: q='What were the main decisions made?' raw_id=16 parsed_id=16 chunks_found=0
+RECV: q='What were the main decisions made?' raw_id=1 parsed_id=1 chunks_found=5
+RECV: q='What were the main decisions made?' raw_id=10 parsed_id=10 chunks_found=1
+RECV: q='What were the main decisions made?' raw_id=12 parsed_id=12 chunks_found=1
+RECV: q='which is the database' raw_id=12 parsed_id=12 chunks_found=1
+RECV: q='What were the main decisions made?' raw_id=4 parsed_id=4 chunks_found=0
+RECV: q='what were the main decision made' raw_id=4 parsed_id=4 chunks_found=0
+RECV: q='What were the main decisions made?' raw_id=4 parsed_id=4 chunks_found=0
+RECV: q='What were the main decisions made?' meeting_id=5 vector_chunks=0 db_chunks=1
+RECV: q='what were the decisions made' meeting_id=5 vector_chunks=0 db_chunks=1
+RECV: q='what is the database' meeting_id=5 vector_chunks=0 db_chunks=0
+RECV: q='What were the main decisions made?' meeting_id=4 vector_chunks=0 db_chunks=2
+RECV: q='What were the main decisions made?' meeting_id=8 vector_chunks=1 db_chunks=1
+RECV: q='what is the dtabase used' meeting_id=8 vector_chunks=1 db_chunks=0
+RECV: q='list the decisions' meeting_id=8 vector_chunks=1 db_chunks=1
+RECV: q='who is building the react dashboard' meeting_id=8 vector_chunks=1 db_chunks=0
+RECV: q='which is the database used' meeting_id=8 vector_chunks=1 db_chunks=0
+RECV: q='who is building the react dashboard now' meeting_id=8 vector_chunks=1 db_chunks=0
+RECV: q='who deal with vtt cleaner' meeting_id=8 vector_chunks=1 db_chunks=0
+RECV: q='what were the decisions made' meeting_id=8 vector_chunks=1 db_chunks=1
+RECV: q='What were the main decisions made?' meeting_id=8 vector_chunks=1 db_chunks=2

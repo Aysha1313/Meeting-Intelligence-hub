@@ -8,6 +8,8 @@ export const meetingAPI = {
   list: () => api.get('/meetings/'),
   create: (data) => api.post('/meetings/', data),
   get: (id) => api.get(`/meetings/${id}`),
+  getActions: (id) => api.get(`/meetings/${id}/actions`),
+  getDecisions: (id) => api.get(`/meetings/${id}/decisions`),
 };
 
 export const transcriptAPI = {
@@ -21,7 +23,10 @@ export const transcriptAPI = {
 };
 
 export const chatAPI = {
-  ask: (question, meetingId = null) => api.post('/chat/', { question, meeting_id: meetingId }),
+  ask: (question, meetingId = null) => api.post('/chat/', { 
+    question, 
+    meeting_id: meetingId ? parseInt(meetingId, 10) : null 
+  }),
 };
 
 export default api;

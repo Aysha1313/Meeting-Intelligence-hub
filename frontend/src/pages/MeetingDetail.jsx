@@ -175,9 +175,9 @@ const MeetingDetail = () => {
         <div className="tab-content animate-fade-in" key={activeTab}>
           {activeTab === 'outcomes' && (
             <ActionItemsTable 
-              key={`actions-${activeTranscriptId}-${transcripts.find(t => t.id === activeTranscriptId)?.status}`}
-              transcriptId={activeTranscriptId} 
-              status={transcripts.find(t => t.id === activeTranscriptId)?.status}
+              key={`actions-meeting-${id}-${transcripts.map(t => t.status).join('-')}`}
+              meetingId={id} 
+              status={transcripts.some(t => t.status === 'processing' || t.status === 'pending') ? 'processing' : transcripts.length > 0 && transcripts.every(t => t.status === 'failed') ? 'failed' : 'completed'}
             />
           )}
           {activeTab === 'sentiment' && (
@@ -186,7 +186,7 @@ const MeetingDetail = () => {
               transcriptId={activeTranscriptId} 
             />
           )}
-          {activeTab === 'chat' && <Chatbot meetingId={id} />}
+          {activeTab === 'chat' && <Chatbot meetingId={id} transcriptCount={transcripts.length} />}
         </div>
       </div>
     </div>

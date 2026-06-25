@@ -3,7 +3,19 @@ import { Send, User, Bot, AlertCircle } from 'lucide-react';
 import { chatAPI } from '../api';
 import './Chatbot.css';
 
-const Chatbot = ({ meetingId }) => {
+// Lightweight markdown → HTML (bold, italic, newlines)
+const renderMarkdown = (text) => {
+  const html = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br/>');
+  return { __html: html };
+};
+
+const Chatbot = ({ meetingId, transcriptCount }) => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -68,9 +80,22 @@ const Chatbot = ({ meetingId }) => {
     }
   };
 
+  if (transcriptCount === 0) {
+    return (
+      <div className="chatbot-container empty-state animate-fade-in">
+        <div className="empty-chat-message">
+          <AlertCircle size={48} className="empty-chat-icon" />
+          <h3>No Transcripts Found</h3>
+          <p>Please upload at least one .vtt or .txt transcript to start chatting with the AI about this meeting.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="chatbot-container animate-fade-in">
       <div className="chat-messages">
+
         {messages.map((msg, index) => (
           <div key={index} className={`message-wrapper ${msg.role}`}>
             <div className="message-avatar">
@@ -79,7 +104,7 @@ const Chatbot = ({ meetingId }) => {
             <div className="message-content-wrapper">
               <div className={`message-bubble ${msg.isError ? 'error' : ''}`}>
                 {msg.isError && <AlertCircle size={16} className="error-icon" />}
-                <p>{msg.content}</p>
+                <p dangerouslySetInnerHTML={renderMarkdown(msg.content)} />
               </div>
 
               {msg.sources && msg.sources.length > 0 && (

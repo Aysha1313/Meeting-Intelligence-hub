@@ -74,18 +74,22 @@ For each action item extract:
 - task_description: what they need to do
 - due_date: when (use "Not specified" if unclear)
 
+IMPORTANT: You MUST extract ALL decisions and ALL action items. Do not just extract one of each.
+
 Return ONLY valid JSON, nothing else:
 {{
   "decisions": [
+    {{"decision_text": "...", "context": "..."}},
     {{"decision_text": "...", "context": "..."}}
   ],
   "action_items": [
+    {{"responsible_person": "...", "task_description": "...", "due_date": "..."}},
     {{"responsible_person": "...", "task_description": "...", "due_date": "..."}}
   ]
 }}
 
 TRANSCRIPT:
-{transcript_text[:8000]}
+{transcript_text[:100000]}
 """
     raw = _call_mistral(prompt)
     return _parse_json(raw)
@@ -109,7 +113,7 @@ Return ONLY a valid JSON array, nothing else:
 ]
 
 TRANSCRIPT:
-{transcript_text[:6000]}
+{transcript_text[:100000]}
 """
     raw = _call_mistral(prompt)
     return _parse_json(raw)
@@ -129,6 +133,7 @@ INSTRUCTIONS:
 2. Cite the source (meeting ID/filename) where the information was found.
 3. If the answer is absolutely not present in the provided context, ONLY then say: "I couldn't find that information in the available transcripts."
 4. Be helpful. If a mention is found (e.g., "X is used for Y"), use it as the answer even if it's brief.
+5. If the user asks to list items (like decisions or action items), list ALL of them from the context without omitting any.
 
 QUESTION: {question}
 

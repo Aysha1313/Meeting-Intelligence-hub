@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Download } from 'lucide-react';
-import { transcriptAPI } from '../api';
+import { transcriptAPI, meetingAPI } from '../api';
 import './ActionItemsTable.css';
 import { useToast } from './Toast';
 
-const ActionItemsTable = ({ transcriptId, status, type = 'actions' }) => {
+const ActionItemsTable = ({ transcriptId, meetingId, status, type = 'actions' }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addToast } = useToast();
 
   useEffect(() => {
-    if (transcriptId) {
+    if (transcriptId || meetingId) {
       fetchData();
     } else {
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transcriptId, type]);
+  }, [transcriptId, meetingId, type]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [actionsRes, decisionsRes] = await Promise.all([
-        transcriptAPI.getActions(transcriptId),
-        transcriptAPI.getDecisions(transcriptId)
-      ]);
+      let actionsRes, decisionsRes;
+      if (meetingId) {
+        [actionsRes, decisionsRes] = await Promise.all([
+          meetingAPI.getActions(meetingId),
+          meetingAPI.getDecisions(meetingId)
+        ]);
+      } else {
+        [actionsRes, decisionsRes] = await Promise.all([
+          transcriptAPI.getActions(transcriptId),
+          transcriptAPI.getDecisions(transcriptId)
+        ]);
+      }
 
       const actionsData = (actionsRes.data?.items || actionsRes.data || []).map(a => ({ ...a, itemType: 'Action Item' }));
       const decisionsData = (decisionsRes.data?.items || decisionsRes.data || []).map(d => ({ ...d, itemType: 'Decision' }));

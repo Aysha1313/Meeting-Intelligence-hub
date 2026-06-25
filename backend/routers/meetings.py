@@ -31,6 +31,22 @@ def get_meeting(meeting_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Meeting not found")
     return _enrich(m, db)
 
+@router.get("/{meeting_id}/decisions", response_model=List[schemas.DecisionResponse])
+def get_meeting_decisions(meeting_id: int, db: Session = Depends(get_db)):
+    transcripts = db.query(models.Transcript).filter(models.Transcript.meeting_id == meeting_id).all()
+    if not transcripts:
+        return []
+    t_ids = [t.id for t in transcripts]
+    return db.query(models.Decision).filter(models.Decision.transcript_id.in_(t_ids)).all()
+
+@router.get("/{meeting_id}/actions", response_model=List[schemas.ActionItemResponse])
+def get_meeting_actions(meeting_id: int, db: Session = Depends(get_db)):
+    transcripts = db.query(models.Transcript).filter(models.Transcript.meeting_id == meeting_id).all()
+    if not transcripts:
+        return []
+    t_ids = [t.id for t in transcripts]
+    return db.query(models.ActionItem).filter(models.ActionItem.transcript_id.in_(t_ids)).all()
+
 def _enrich(meeting, db):
     ids = [t.id for t in meeting.transcripts]
     action_count = db.query(models.ActionItem).filter(
