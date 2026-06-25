@@ -1,14 +1,37 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
 from database import engine, Base
 import models
 from routers import transcripts, meetings, chat
 import os
+import threading
+import logging
 
-Base.metadata.create_all(bind=engine)
+logger = logging.getLogger("uvicorn.error")
 
-app = FastAPI(title="Meeting Intelligence Hub", version="1.0.0")
+def reindex_on_startup():
+    """Re-index all transcripts into ChromaDB on startup (runs in background thread)."""
+    try:
+        logger.info("Starting ChromaDB re-indexing on startup...")
+        from reindex import sync
+        sync()
+        logger.info("ChromaDB re-indexing complete.")
+    except Exception as e:
+        logger.error(f"ChromaDB re-indexing failed (chat may not work): {e}")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create DB tables
+    Base.metadata.create_all(bind=engine)
+    # Start reindex in background so app boots instantly
+    thread = threading.Thread(target=reindex_on_startup, daemon=True)
+    thread.start()
+    yield
+    # Shutdown — nothing to clean up
+
+app = FastAPI(title="Meeting Intelligence Hub", version="1.0.0", lifespan=lifespan)
 
 origins = [
     "http://localhost:5173",
