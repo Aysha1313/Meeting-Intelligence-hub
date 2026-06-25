@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: meeting-intelligence-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: MISTRAL_API_KEY
+        sync: false        # Render will prompt you to enter this securely
+      - key: DATABASE_URL
+        sync: false        # Render will prompt you to enter this securely
+      - key: CHROMA_PERSIST_DIR
+        value: /data/chroma_db
+      - key: FRONTEND_URL
+        sync: false        # Add your Vercel URL after frontend is deployed
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    disk:
+      name: chroma-storage
+      mountPath: /data/chroma_db
+      sizeGB: 1
