@@ -12,12 +12,8 @@ services:
       - key: DATABASE_URL
         sync: false        # Render will prompt you to enter this securely
       - key: CHROMA_PERSIST_DIR
-        value: /data/chroma_db
+        value: ./chroma_db
       - key: FRONTEND_URL
         sync: false        # Add your Vercel URL after frontend is deployed
       - key: PYTHON_VERSION
         value: 3.11.0
-    disk:
-      name: chroma-storage
-      mountPath: /data/chroma_db
-      sizeGB: 1
