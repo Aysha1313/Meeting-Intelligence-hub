@@ -4,6 +4,10 @@ backend/__pycache__/
 backend/.pytest_cache/
 backend/*.db
 backend/.env
+backend/chroma_db/
+backend/migrate_to_supabase.py
+backend/*.log
+backend/*.txt
 
 # Node
 frontend/node_modules/
