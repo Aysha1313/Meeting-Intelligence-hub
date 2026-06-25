@@ -35,7 +35,8 @@ app = FastAPI(title="Meeting Intelligence Hub", version="1.0.0", lifespan=lifesp
 
 origins = [
     "http://localhost:5173",
-    os.getenv("FRONTEND_URL", "")
+    "https://meeting-intelligence-hub-tau.vercel.app",
+    os.getenv("FRONTEND_URL", ""),
 ]
 
 app.add_middleware(
